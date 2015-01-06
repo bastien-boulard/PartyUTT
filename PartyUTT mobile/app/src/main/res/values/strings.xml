@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PartyUTT</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="switch_On">0</string>
+    <string name="switch_Off">I</string>
+
+    <!-- Params -->
+    <string name="param_email">email</string>
+    <string name="param_token">token</string>
+    <string name="param_ID">ID</string>
+    <string name="param_pseudo">pseudo</string>
+    <string name="param_userPseudo">userPseudo</string>
+    <string name="param_isOrga">isOrga</string>
+    <string name="param_isComing">isComing</string>
+    <string name="param_eventID">eventID</string>
+    <string name="param_guests">guests</string>
+
+
+    <!-- Accueil -->
+    <string name="acceuil_VosSoirées">Vos soirées</string>
+    <string name="accueil_Createur">Créateur</string>
+    <string name="accueil_Orga">Orga</string>
+    <string name="accueil_Invite">Invité</string>
+    <string name="title_activity_login">Login</string>
+    <string name="accueil_request_query_token">token</string>
+    <string name="accueil_request_answer_events">events</string>
+    <string name="accueil_request_answer_eventID">eventID</string>
+    <string name="accueil_request_answer_eventName">eventName</string>
+    <string name="accueil_request_answer_eventDate">eventDate</string>
+    <string name="accueil_request_answer_eventOwner">userPseudo</string>
+    <string name="accueil_request_answer_isOrga">isOrga</string>
+    <string name="accueil_request_answer_isComing">isComing</string>
+
+    <!-- Login -->
+    <string name="login_Identifiant">Identifiant</string>
+    <string name="login_Password">Mot de passe</string>
+    <string name="login_btn_Connexion">Connexion</string>
+    <string name="login_Token">Token</string>
+    <string name="login_POST_param_email">email</string>
+    <string name="login_POST_param_password">password</string>
+    <string name="login_POST_answer_error">error</string>
+    <string name="login_POST_answer_token">token</string>
+    <string name="login_POST_answer_pseudo">pseudo</string>
+
+    <!-- Create Party -->
+    <string name="createparty_titre">Titre</string>
+    <string name="createparty_date">Date</string>
+    <string name="createparty_address">Adresse</string>
+    <string name="createparty_valider">Valider</string>
+    <string name="createparty_ajoutNouvelInvite">Ajouter un nouvel invit\é</string>
+
+    <!-- Menu -->
+
+    <string name="menu_profil">Profil</string>
+    <string name="menu_accueil">Accueil</string>
+
+    <!-- Divers -->
+    <string name="divers_present_soiree">I\'m in</string>
+    <string name="divers_absent_soiree">I\'m out</string>
+
+
+    <!-- Erreur -->
+
+    <string name="title_activity_party">Party</string>
+    <string name="title_activity_create_party">CreateParty</string>
+
+
+
+
+</resources>

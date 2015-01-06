@@ -1,0 +1,139 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".Accueil">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="40dp"
+        android:text="@string/acceuil_VosSoirées" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/layoutLabelChef"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/txt_createur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/accueil_Createur" />
+
+            <Switch
+                android:id="@+id/switch_Createur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textOff="@string/switch_Off"
+                android:textOn="@string/switch_On" />
+
+
+        </RelativeLayout>
+
+        <ListView
+            android:visibility="gone"
+            android:id="@+id/listView_Createur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <RelativeLayout
+            android:background="@android:color/black"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <RelativeLayout
+            android:id="@+id/layoutLabelOrga"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/txt_orga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/accueil_Orga" />
+
+            <Switch
+                android:id="@+id/switch_Orga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textOff="@string/switch_Off"
+                android:textOn="@string/switch_On" />
+
+        </RelativeLayout>
+
+        <ListView
+            android:visibility="gone"
+            android:id="@+id/listView_Orga"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <RelativeLayout
+            android:background="@android:color/black"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <RelativeLayout
+            android:id="@+id/layoutLabelInvite"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/txt_invite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/accueil_Invite" />
+
+            <Switch
+                android:id="@+id/switch_Invite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textOff="@string/switch_Off"
+                android:textOn="@string/switch_On" />
+
+        </RelativeLayout>
+
+        <ListView
+            android:visibility="gone"
+            android:id="@+id/listView_Invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:layout_marginTop="30px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nouvelle soirée"
+        android:id="@+id/createparty"
+        android:layout_gravity="center_horizontal" />
+
+
+</LinearLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="role_array">
+        <item>Orga</item>
+        <item>Invit\é</item>
+    </string-array>
+
+</resources>
