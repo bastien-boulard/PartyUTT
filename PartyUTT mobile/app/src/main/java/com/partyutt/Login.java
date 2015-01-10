@@ -1,12 +1,12 @@
 package com.partyutt;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.partyutt.Webservice.Async_Task;
-import com.partyutt.Webservice.OnTaskCompleted;
+
+import com.partyutt.Traitement.TraiterLogin;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -33,16 +33,18 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
-public class Login extends Activity implements OnTaskCompleted{
+public class Login extends Activity{
 
+    public static Context myContext;
+    String answer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        myContext = this;
 
         Button btn_Connexion = (Button)findViewById(R.id.btn_Connexion);
         btn_Connexion.setOnClickListener(new View.OnClickListener() {
@@ -51,9 +53,24 @@ public class Login extends Activity implements OnTaskCompleted{
                 final EditText editIdentifiant = (EditText)findViewById(R.id.editIdentifiant);
                 final EditText editPassword = (EditText)findViewById(R.id.editPassword);
 
-                asyncPOSTTask POSTask = new asyncPOSTTask();
-                POSTask.execute(editIdentifiant.getText().toString(),editPassword.getText().toString(),getApplicationContext());
-                //Async_Task asyncTask = new Async_Task();
+                TraiterLogin traiterLogin = new TraiterLogin();
+                answer = traiterLogin.verificationDonneesLogin(editIdentifiant.getText().toString(),editPassword.getText().toString(),getApplicationContext());
+
+                if (answer.equals(getString(R.string.erreur_OK)))
+                {
+                    traiterLogin.requeteLogin(editIdentifiant.getText().toString(),editPassword.getText().toString(),getApplicationContext());
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
+                    builder.setMessage(answer)
+                            .setTitle(R.string.erreur_Erreur)
+                            .setPositiveButton(R.string.erreur_OK, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    builder.create();
+                }
+                //asyncPOSTTask POSTask = new asyncPOSTTask();
+                //POSTask.execute(editIdentifiant.getText().toString(),editPassword.getText().toString(),getApplicationContext());
             }
         });
     }
@@ -72,15 +89,12 @@ public class Login extends Activity implements OnTaskCompleted{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_inscription) {
+            Intent inscription = new Intent(getApplicationContext(),Inscription.class);
+            startActivity(inscription);
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onTaskCompleted() {
-
     }
 
     private class asyncPOSTTask extends AsyncTask<Object, Void, Context> {
@@ -95,7 +109,7 @@ public class Login extends Activity implements OnTaskCompleted{
             try {
 
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost("http://192.168.43.147/partyUTT/login.php");
+                HttpPost httppost = new HttpPost("http://192.168.173.1/partyUTT/login.php");
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair(getResources().getString(R.string.login_POST_param_email), (String) params[0]));
@@ -109,7 +123,6 @@ public class Login extends Activity implements OnTaskCompleted{
                 JSONObject requestAnswer = new JSONObject(content);
                 JSONerror = requestAnswer.getString(getResources().getString(R.string.login_POST_answer_error));
                 JSONtoken = requestAnswer.getString(getResources().getString(R.string.login_POST_answer_token));
-                JSONpseudo = requestAnswer.getString(getResources().getString(R.string.login_POST_answer_pseudo));
 
                 Log.d("Content",content.toString());
 
@@ -133,9 +146,9 @@ public class Login extends Activity implements OnTaskCompleted{
                 Toast.makeText(result,"Mauvais identifiants",Toast.LENGTH_LONG).show();
             } else {
                 Intent accueilIntent = new Intent(result,Accueil.class);
-                accueilIntent.putExtra(getResources().getString(R.string.login_POST_param_email),userEmail);
+                Log.d("BLAH1",userEmail);
+                accueilIntent.putExtra(getResources().getString(R.string.param_email),userEmail);
                 accueilIntent.putExtra(getResources().getString(R.string.login_Token),JSONtoken);
-                accueilIntent.putExtra(getResources().getString(R.string.login_POST_answer_pseudo),JSONpseudo);
                 startActivity(accueilIntent);
             }
         }

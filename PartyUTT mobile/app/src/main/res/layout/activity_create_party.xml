@@ -29,11 +29,23 @@
             <TextView
                 style="@style/CreatePartyLbl"
                 android:text="@string/createparty_date"
-                android:id="@+id/lbldate" />
+                android:id="@+id/lblheure" />
 
-            <EditText
+            <TextView
                 style="@style/CreatePartyEdt"
                 android:text="Name"
+                android:id="@+id/partyheure"/>
+        </LinearLayout>
+        <LinearLayout
+            style="@style/CreatePartyLayout">
+            <TextView
+                style="@style/CreatePartyLbl"
+                android:text="@string/createparty_date"
+                android:id="@+id/lbldate" />
+
+            <TextView
+                style="@style/CreatePartyEdt"
+                android:text="Heure"
                 android:id="@+id/partydate"/>
         </LinearLayout>
         <LinearLayout
@@ -60,6 +72,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
             <TableLayout
+                android:id="@+id/tablelayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                     <TableRow

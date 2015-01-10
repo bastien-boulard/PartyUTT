@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">PartyUTT</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="switch_On">0</string>
     <string name="switch_Off">I</string>
 
     <!-- Params -->
     <string name="param_email">email</string>
+    <string name="param_password">password</string>
     <string name="param_token">token</string>
     <string name="param_ID">ID</string>
     <string name="param_pseudo">pseudo</string>
@@ -16,15 +15,18 @@
     <string name="param_isOrga">isOrga</string>
     <string name="param_isComing">isComing</string>
     <string name="param_eventID">eventID</string>
+    <string name="param_eventName">eventName</string>
+    <string name="param_eventAddress">eventAddress</string>
+    <string name="param_eventDate">eventDate</string>
     <string name="param_guests">guests</string>
-
+    <string name="param_guestList">guestList</string>
+    <string name="param_guestStatus">guestStatus</string>
 
     <!-- Accueil -->
     <string name="acceuil_VosSoirées">Vos soirées</string>
     <string name="accueil_Createur">Créateur</string>
     <string name="accueil_Orga">Orga</string>
     <string name="accueil_Invite">Invité</string>
-    <string name="title_activity_login">Login</string>
     <string name="accueil_request_query_token">token</string>
     <string name="accueil_request_answer_events">events</string>
     <string name="accueil_request_answer_eventID">eventID</string>
@@ -47,13 +49,24 @@
 
     <!-- Create Party -->
     <string name="createparty_titre">Titre</string>
+    <string name="createparty_heure">Heure</string>
     <string name="createparty_date">Date</string>
     <string name="createparty_address">Adresse</string>
     <string name="createparty_valider">Valider</string>
     <string name="createparty_ajoutNouvelInvite">Ajouter un nouvel invit\é</string>
 
-    <!-- Menu -->
+    <!-- Inscription -->
+    <string name="inscription_valider">Valider</string>
+    <string name="inscription_mail">Adresse mail</string>
+    <string name="inscription_motdepasse">Mot de passe</string>
+    <string name="inscription_confirmationmotdepasse">Confirmer le mot de passe</string>
+    <string name="inscription_erreurconfirmation">Les mots de passe ne sont pas identiques</string>
+    <string name="inscription_erreurtaillemdp">Taille du mot de passe doit être supérieure à 5</string>
+    <string name="inscription_adressemaildejaexistante">Adresse mail déjà utilisée</string>
+    <string name="inscription_inscriptionOK">Inscription réussie</string>
+    <string name="inscription_félicitations">Félicitations</string>
 
+    <!-- Menu -->
     <string name="menu_profil">Profil</string>
     <string name="menu_accueil">Accueil</string>
 
@@ -61,13 +74,30 @@
     <string name="divers_present_soiree">I\'m in</string>
     <string name="divers_absent_soiree">I\'m out</string>
 
-
     <!-- Erreur -->
+    <string name="erreur_Erreur">Erreur</string>
+    <string name="erreur_OK">OK</string>
+    <string name="erreur_mailVide">Vous n\'avez pas sasi votre adresse mail</string>
+    <string name="erreur_MDPVide">Vous n\'avez pas saisi de mot de passe</string>
+    <string name="erreur_addressVide">Erreur</string>
+    <string name="erreur_eventNameVide">Erreur</string>
 
-    <string name="title_activity_party">Party</string>
-    <string name="title_activity_create_party">CreateParty</string>
 
+    <!-- Titre activités-->
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_party">La soirée</string>
+    <string name="title_activity_create_party">Créer une soirée</string>
+    <string name="title_activity_inscription">Inscription</string>
+    <string name="title_activity_accueil">Accueil</string>
+    <string name="app_name">PartyUTT</string>
 
+    <!-- Webservice -->
+    <string name="webservice_inscription">http://192.168.173.1/partyUTT/inscription.php</string>
+    <string name="webservice_login">http://192.168.173.1/partyUTT/login.php</string>
+    <string name="webservice_accueil">http://192.168.173.1/partyUTT/homepage.php</string>
+    <string name="webservice_createparty">http://192.168.173.1/partyUTT/newevent.php</string>
+    <string name="webservice_party">http://192.168.173.1/partyUTT/inscription.php</string>
 
-
+    //.43.147
+    //.173.1
 </resources>

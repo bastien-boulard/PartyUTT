@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.partyutt.Traitement.TraiterAccueil;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -44,15 +46,13 @@ import java.util.Set;
 
 public class Accueil extends Activity {
 
+    List<Map<String, String>> partyList = new ArrayList<Map<String, String>>();
+
     Button createParty;
     Switch switchCreateur, switchOrga, switchInvite;
     ListView listViewCreateur, listViewOrga, listViewInvite;
-    List<Map<String, String>> partyList = new ArrayList<Map<String, String>>();
-    ArrayList<String> eventsOwner = new ArrayList<String>();
-    ArrayList<String> eventsOrga = new ArrayList<String>();
-    ArrayList<String> eventsInvite = new ArrayList<String>();
-    String TRICHE;
-
+    TraiterAccueil.AllParty userParty;
+    String strintentToken,strintentEmail;
 
     ArrayAdapter<String> adaptera, adapterb, adapterc;
 
@@ -61,23 +61,23 @@ public class Accueil extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
 
-        final String strintentToken,strintentEmail,strintentPseudo;
+
         if (getIntent().getExtras() != null) {
             Intent intent = getIntent();
-            strintentToken = intent.getStringExtra(getResources().getString(R.string.login_Token));
-            strintentEmail = intent.getStringExtra(getResources().getString(R.string.login_POST_param_email));
-            strintentPseudo = intent.getStringExtra(getResources().getString(R.string.login_POST_answer_pseudo));
-            asyncPOSTTask POSTask = new asyncPOSTTask();
-            POSTask.execute(strintentEmail,strintentToken,strintentPseudo,getApplicationContext());
+            strintentToken = intent.getStringExtra(getResources().getString(R.string.param_token));
+            strintentEmail = intent.getStringExtra(getResources().getString(R.string.param_email));
+
+            //TraiterAccueil traiterAccueil = new TraiterAccueil();
+            //traiterAccueil.recuperationPartyAccueil(strintentEmail,strintentToken,getApplicationContext());
+            //Log.d("BLAH2", strintentEmail);
+            //asyncPOSTTask POSTask = new asyncPOSTTask();
+            //POSTask.execute(strintentEmail,strintentToken,"",getApplicationContext());
         } else {
             strintentEmail="";
-            strintentPseudo="";
             strintentToken="";
-            Intent testintent = new Intent(getApplicationContext(),Login.class);
-            startActivity(testintent);
             finish();
         }
-
+/*
         switchCreateur = (Switch)findViewById(R.id.switch_Createur);
         switchOrga = (Switch)findViewById(R.id.switch_Orga);
         switchInvite = (Switch)findViewById(R.id.switch_Invite);
@@ -87,15 +87,16 @@ public class Accueil extends Activity {
         listViewInvite = (ListView)findViewById(R.id.listView_Invite);
 
         adaptera = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1,eventsOwner);
+                android.R.layout.simple_list_item_1, android.R.id.text1,userParty.eventsOwner);
         adapterb = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1,eventsOrga);
+                android.R.layout.simple_list_item_1, android.R.id.text1,userParty.eventsOrga);
         adapterc = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1,eventsInvite);
+                android.R.layout.simple_list_item_1, android.R.id.text1,userParty.eventsInvite);
 
         listViewCreateur.setAdapter(adaptera);
         listViewOrga.setAdapter(adapterb);
         listViewInvite.setAdapter(adapterc);
+
 
         switchCreateur.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -105,13 +106,6 @@ public class Accueil extends Activity {
                 } else {
                     listViewCreateur.setVisibility(View.GONE);
                 }
-            }
-        });
-
-        listViewOrga.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),"WOLOLO !",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -136,29 +130,18 @@ public class Accueil extends Activity {
                 }
             }
         });
-
+*/
         createParty = (Button)findViewById(R.id.createparty);
         createParty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent createParty = new Intent(getApplicationContext(),CreateParty.class);
-
+                createParty.putExtra(getApplicationContext().getResources().getString(R.string.param_email),strintentEmail);
+                createParty.putExtra(getApplicationContext().getResources().getString(R.string.param_token),strintentToken);
                 startActivity(createParty);
             }
         });
 
-        listViewCreateur.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent partyviewer = new Intent(getApplicationContext(),Party.class);
-                partyviewer.putExtra(getResources().getString(R.string.param_token),strintentToken);
-                partyviewer.putExtra(getResources().getString(R.string.param_email),strintentEmail);
-                partyviewer.putExtra(getResources().getString(R.string.param_ID),TRICHE);
-                partyviewer.putExtra(getResources().getString(R.string.param_userPseudo),strintentPseudo);
-                startActivity(partyviewer);
-
-            }
-        });
     }
 
 
@@ -181,6 +164,7 @@ public class Accueil extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+
     private class asyncPOSTTask extends AsyncTask<Object, Void, Context> {
 
         private String JSONerror;
@@ -192,17 +176,17 @@ public class Accueil extends Activity {
             try {
 
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost("http://192.168.43.147/partyUTT/homepage.php");
-
+                HttpPost httppost = new HttpPost("http://192.168.173.1/partyUTT/homepage.php");
+                Log.d("BLAH3",(String) params[0]);
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                nameValuePairs.add(new BasicNameValuePair(getResources().getString(R.string.login_POST_param_email), (String) params[0]));
-                nameValuePairs.add(new BasicNameValuePair(getResources().getString(R.string.accueil_request_query_token), (String) params[1]));
-                Log.d("BLAH", nameValuePairs.toString());
+                nameValuePairs.add(new BasicNameValuePair(getResources().getString(R.string.param_email), (String) params[0]));
+                nameValuePairs.add(new BasicNameValuePair(getResources().getString(R.string.param_token), (String) params[1]));
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                Log.d("BLAH4", nameValuePairs.toString());
 
                 HttpResponse response = httpclient.execute(httppost);
                 content = EntityUtils.toString(response.getEntity(), "utf8");
-
+                Log.d("BLAH",content);
                 JSONObject requestAnswer = new JSONObject(content);
                 JSONerror = requestAnswer.getString(getResources().getString(R.string.login_POST_answer_error));
                 JSONArray JSONevents = requestAnswer.getJSONArray(getResources().getString(R.string.accueil_request_answer_events));
@@ -212,21 +196,21 @@ public class Accueil extends Activity {
                     contactMap.put("eventID", new Integer(JSONevents.getJSONObject(indice).getInt("eventID")));
                     contactMap.put("eventName", JSONevents.getJSONObject(indice).getString("eventName").toString());
                     //contactMap.put("eventDate", JSONevents.getJSONObject(indice).getString("userPseudo").toString());
-                    contactMap.put("userPseudo", JSONevents.getJSONObject(indice).getString("userPseudo").toString());
+                    contactMap.put("userMail", JSONevents.getJSONObject(indice).getString("userMail").toString());
                     contactMap.put("isOrga", JSONevents.getJSONObject(indice).getInt("isOrga"));
                     contactMap.put("isComing", JSONevents.getJSONObject(indice).getInt("isComing"));
                     partyList.add(contactMap);
 
-                    if (contactMap.get("userPseudo").toString().equals(params[2]))
+                    if (contactMap.get("userMail").toString().equals(params[0]))
                     {
-                        eventsOwner.add(contactMap.get("eventName").toString());
-                        TRICHE = contactMap.get("eventID").toString();
+                        userParty.eventsOwner.add(contactMap.get("eventName").toString());
+                        userParty.IDOwner = (ArrayList<Integer>) contactMap.get("eventID");
 
                     } else {
                         if (((Integer) contactMap.get("isOrga")) == 1) {
-                            eventsOrga.add(contactMap.get("eventName").toString());
+                            userParty.eventsOrga.add(contactMap.get("eventName").toString());
                         } else {
-                            eventsInvite.add(contactMap.get("eventName").toString());
+                            userParty.eventsInvite.add(contactMap.get("eventName").toString());
                         }
                     }
                 }
@@ -257,4 +241,5 @@ public class Accueil extends Activity {
         }
 
     }
+
 }

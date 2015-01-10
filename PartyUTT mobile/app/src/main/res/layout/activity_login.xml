@@ -14,11 +14,13 @@
         android:inputType="textPersonName"
         android:hint="@string/login_Identifiant"
         android:ems="10"
+        android:text="johnmcafee@utt.fr"
         android:id="@+id/editIdentifiant"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />
 
     <EditText
+        android:text="johnmcafee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"

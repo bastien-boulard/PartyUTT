@@ -21,7 +21,6 @@
 
     <style name="CreatePartyEdt" parent="CreatePartyLbl">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:layout_gravity">fill_horizontal</item>
     </style>
 
     <style name="CreatePartyAddPpl">

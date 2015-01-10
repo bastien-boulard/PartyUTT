@@ -15,6 +15,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.partyutt.Traitement.TraiterParty;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -36,11 +38,12 @@ import java.util.Map;
 
 public class Party extends Activity {
 
+    public static TextView titreParty,titleAddress,titleDate,titleStatut;
+
     List<Map<String, String>> contactList = new ArrayList<Map<String, String>>();
     List<Map<String, String>> ownerParty = new ArrayList<Map<String, String>>();
     List<Map<String, String>> orgaParty = new ArrayList<Map<String, String>>();
     List<Map<String, String>> guestParty = new ArrayList<Map<String, String>>();
-    TextView titreParty,titleAddress,titleDate,titleStatut;
     String strintentToken,strintentEmail,strintentID,strintentUserPseudo;
     String error, eventName, eventDate, eventAddress;
 
@@ -54,14 +57,21 @@ public class Party extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party);
 
+        titreParty = (TextView)findViewById(R.id.titleparty);
+        titleStatut = (TextView)findViewById(R.id.titlestatut);
+        titleAddress = (TextView)findViewById(R.id.titleaddress);
+        titleDate = (TextView)findViewById(R.id.titledate);
+
         if (getIntent().getExtras() != null) {
             Intent intent = getIntent();
             strintentUserPseudo = intent.getStringExtra(getResources().getString(R.string.param_userPseudo));
             strintentToken = intent.getStringExtra(getResources().getString(R.string.param_token));
             strintentEmail = intent.getStringExtra(getResources().getString(R.string.param_email));
             strintentID = intent.getStringExtra(getResources().getString(R.string.param_ID));
-            asyncPOSTTask askWSForPartyData = new asyncPOSTTask();
-            askWSForPartyData.execute(strintentEmail, strintentToken, strintentID,getApplicationContext());
+            //asyncPOSTTask askWSForPartyData = new asyncPOSTTask();
+            //askWSForPartyData.execute(strintentEmail, strintentToken, strintentID,getApplicationContext());
+            TraiterParty traiterParty = new TraiterParty();
+            traiterParty.getPartyInfo(strintentEmail,strintentToken,strintentID,getApplicationContext());
         } else {
             strintentEmail="";
             strintentID="";
