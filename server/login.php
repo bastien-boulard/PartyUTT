@@ -2,13 +2,11 @@
 	
 require_once ('model/user_db.php');
 
-// $_POST['email'] = 'johnmcafee@utt.fr';
-// $_POST['password'] = 'johnmcafee';
-// $_POST['token'] = '5c1f92225dc7b7e3791c29d95710f160';
 
 $user = new User_db();
 
 if (isset($_POST['token'])){
+	
 	$loginData = $user->checkToken($_POST['email'], $_POST['token']);
 }
 else {
@@ -17,7 +15,14 @@ else {
 echo json_encode($loginData);
 
 
-/* functions used for the login action */
+/* 
+ * Fonction de login, elle hache le mot de passe envoyé via requête POST et le compare à celui stocké en base pour l'email indiqué 
+ * @param User $user
+ * @param String $email
+ * @param String $pwd
+ *
+ * @return array $loginReturn
+ */
 function login($user, $email, $pwd){
 
 	$hashPwd = hash('sha256', $pwd);
@@ -29,9 +34,8 @@ function login($user, $email, $pwd){
 		$loginReturn = array(
 			'error' => false,
 			'token' => $token,
-			'pseudo' => $user->getPseudo($email)
 		);
-		$user->setToken($email, $token);
+		$user->updateToken($email, $token);
 	}
 	else {
 		$loginReturn = array(
@@ -42,25 +46,13 @@ function login($user, $email, $pwd){
 	return $loginReturn;
 }
 
-// function checkToken($email, $token){
-// 	$user = new User_db();
-// 	$token_db = $user->getToken($email);
-// 	if (strcmp($token_db, $token) == 0){
-// 		$loginReturn = array(
-// 			'error' => false,
-// 			'token' => $token
-// 		);
-// 	}
-// 	else {
-// 		// echo ('YOU SHALL NOT PASS !!');
-// 		$loginReturn = array(
-// 			'error' => true,
-// 			'token' => ''
-// 		);
-// 	}
-// 	return $loginReturn;
-// }
-
+/*
+ * Cette fonction génère un token de connexion en utilisant l'email et le mot de passe de l'utilisateur
+ * @param String $email
+ * @param String $password
+ *
+ * @return String
+ */
 function generateToken($email, $password){
 	return md5(time() . $email . $password);
 }
