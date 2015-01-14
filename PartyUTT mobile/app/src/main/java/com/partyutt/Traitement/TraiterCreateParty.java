@@ -1,9 +1,10 @@
 package com.partyutt.Traitement;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.partyutt.Party;
+import com.partyutt.CreateParty;
 import com.partyutt.R;
 import com.partyutt.Webservice.POSTRequest;
 
@@ -15,18 +16,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Bastien on 09/01/2015.
@@ -50,20 +44,43 @@ public class TraiterCreateParty {
     }
 
     public String VerifDateEtTime(String date, String time, Context createPartyContext){
+        this.traitementContext = createPartyContext;
         String resultat;
         return date+" "+time;
     }
 
-    public void TraitementCreateParty(String mail, String token,String titre,String adresse, String eventDate, Context createPartyContext){
+    public void TraitementCreateParty(String mail, String token,String titre,String adresse, String eventDate, ArrayList<String> inviteMail, ArrayList<String> inviteRole, Context createPartyContext){
         traitementContext = createPartyContext;
         createPartyPOST createPOST = new createPartyPOST();
-        ArrayList<String> addressMail = new ArrayList<String>();
-        ArrayList<String> statutGugus = new ArrayList<String>();
-        addressMail.add("kimdotcom@utt.fr");
-        addressMail.add("gloubinoursvomitpartout@gerbotron.com");
-        statutGugus.add("1");
-        statutGugus.add("0");
-        createPOST.execute(createPartyContext, createPartyContext.getResources().getString(R.string.webservice_createparty), mail, createPartyContext.getResources().getString(R.string.param_email), token, createPartyContext.getResources().getString(R.string.param_token), titre, createPartyContext.getResources().getString(R.string.param_eventName), adresse, createPartyContext.getResources().getString(R.string.param_eventAddress), eventDate, createPartyContext.getResources().getString(R.string.param_eventDate), addressMail, statutGugus);
+        ArrayList<String> inviteRoleTraite = new ArrayList<String>();
+        int limite = inviteRole.size();
+        for (int indice=0;indice<limite;indice++)
+        {
+            if (inviteRole.get(indice).equals(createPartyContext.getResources().getString(R.string.createparty_orga)))
+            {
+                inviteRoleTraite.add("1");
+            } else {
+                inviteRoleTraite.add("0");
+            }
+        }
+        createPOST.execute(createPartyContext, createPartyContext.getResources().getString(R.string.webservice_createparty), mail, createPartyContext.getResources().getString(R.string.param_email), token, createPartyContext.getResources().getString(R.string.param_token), titre, createPartyContext.getResources().getString(R.string.param_eventName), adresse, createPartyContext.getResources().getString(R.string.param_eventAddress), eventDate, createPartyContext.getResources().getString(R.string.param_eventDate), inviteMail, inviteRoleTraite);
+    }
+
+    public String AddToParty(String mailInvite, String roleInvite, Context createPartyContext){
+        Log.d("TEST",roleInvite);
+        Log.d("TEST",mailInvite);
+        traitementContext = createPartyContext;
+        String errorMSG = createPartyContext.getResources().getString(R.string.createparty_inviteajoute);
+        if (mailInvite.isEmpty() || mailInvite.equals(" "))
+        {
+            errorMSG = createPartyContext.getResources().getString(R.string.erreur_eventNameVide);
+        } else {
+            CreateParty.arrayListMailInvite.add(mailInvite);
+            CreateParty.arrayListRoleInvite.add(roleInvite);
+            CreateParty.customAdapter.notifyDataSetChanged();
+            CreateParty.inviteMail.setText("");
+        }
+        return errorMSG;
     }
 
     private class createPartyPOST extends POSTRequest {
@@ -100,9 +117,12 @@ public class TraiterCreateParty {
             ArrayList<String> addressMail= (ArrayList<String>) params[12];
             ArrayList<String> statutGugus= (ArrayList<String>) params[13];
             int limite = addressMail.size();
+            String lblMail = activityContext.getResources().getString(R.string.param_guestEmail);
+            String lblStatus = activityContext.getResources().getString(R.string.param_guestStatus);
             for (int indice=0;indice<limite;indice++)
             {
-               nameValuePairs.add(new BasicNameValuePair(statutGugus.get(indice),addressMail.get(indice)));
+               nameValuePairs.add(new BasicNameValuePair(lblMail+indice,addressMail.get(indice)));
+                nameValuePairs.add(new BasicNameValuePair(lblStatus+indice,statutGugus.get(indice)));
             }
             Log.d("TEST", String.valueOf(nameValuePairs));
             //nameValuePairs.

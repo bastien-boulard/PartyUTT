@@ -55,9 +55,7 @@
             android:layout_gravity="center_horizontal" />
 
         <RelativeLayout
-            android:background="@android:color/black"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            style="@style/LigneDeSeparation"/>
 
         <RelativeLayout
             android:id="@+id/layoutLabelOrga"
@@ -90,9 +88,7 @@
             android:layout_gravity="center_horizontal" />
 
         <RelativeLayout
-            android:background="@android:color/black"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            style="@style/LigneDeSeparation"/>
 
         <RelativeLayout
             android:id="@+id/layoutLabelInvite"

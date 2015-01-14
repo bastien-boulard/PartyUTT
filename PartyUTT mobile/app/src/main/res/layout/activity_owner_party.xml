@@ -4,91 +4,70 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.partyutt.Party"
+    tools:context="com.partyutt.OwnerParty"
     android:orientation="vertical">
     <LinearLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <RelativeLayout
-            style="@style/PartyRelativeLayout"
-            android:gravity="center">
+        <LinearLayout
+            style="@style/CreatePartyLayout">
             <TextView
+                android:layout_weight="1"
                 style="@style/CreatePartyLbl"
                 android:text="@string/createparty_titre"
-                android:id="@+id/titleparty"
+                android:id="@+id/lbltitre"/>
 
-                />
-        </RelativeLayout>
+            <EditText
+                android:layout_weight="1"
+                style="@style/CreatePartyEdt"
+                android:text="Name"
+                android:id="@+id/partytitle"/>
+        </LinearLayout>
         <LinearLayout
             style="@style/CreatePartyLayout">
             <TextView
+                android:layout_weight="1"
                 style="@style/CreatePartyLbl"
                 android:text="@string/createparty_date"
-                android:id="@+id/titledate" />
+                android:id="@+id/lblheure" />
 
+            <TextView
+                android:layout_weight="1"
+                style="@style/CreatePartyEdt"
+                android:hint="@string/createparty_date"
+                android:id="@+id/partydate"/>
         </LinearLayout>
         <LinearLayout
             style="@style/CreatePartyLayout">
             <TextView
                 style="@style/CreatePartyLbl"
+                android:layout_weight="1"
+                android:text="@string/createparty_heure"
+                android:id="@+id/lbldate" />
+
+            <TextView
+                android:layout_weight="1"
+                style="@style/CreatePartyEdt"
+                android:hint="@string/createparty_heure"
+                android:id="@+id/partyheure"/>
+        </LinearLayout>
+        <LinearLayout
+            style="@style/CreatePartyLayout">
+            <TextView
+                android:layout_weight="1"
+                style="@style/CreatePartyLbl"
                 android:text="@string/createparty_address"
-                android:id="@+id/titleaddress" />
+                android:id="@+id/lvladdress" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/CreatePartyLayout">
-            <TextView
-                android:layout_weight="1"
-                style="@style/CreatePartyModif"
-                android:text="@string/party_statut"
-                android:id="@+id/titlestatut" />
-            <Spinner
-                android:layout_weight="1"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinnerPresence"
-                android:entries="@array/presence_array"
-                android:dropDownSelector="@android:drawable/spinner_dropdown_background"
-/>
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/CreatePartyLayout">
-            <LinearLayout
-                android:layout_weight="1"
-                style="@style/CreatePartyLayout"
-                android:layout_marginBottom="0px">
-            <TextView
-                style="@style/CreatePartyModif"
-                android:text="@string/party_apport"
-                android:id="@+id/lblApport" />
             <EditText
-                android:id="@+id/editApport"
-                style="@style/CreatePartyModif2"
-                android:layout_marginLeft="25px"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_weight="2"
-                style="@style/CreatePartyLayout"
-                android:layout_marginBottom="0px">
-                <TextView
-                    style="@style/CreatePartyModif"
-                    android:text="@string/party_qte"
-                    android:id="@+id/lblQte"
-                    />
-                <EditText
-                    android:inputType="number"
-                    android:layout_marginLeft="25px"
-                    android:gravity="right"
-                    android:id="@+id/editQte"
-                    android:ems="@android:integer/config_shortAnimTime"
-                    style="@style/CreatePartyModif2" />
-            </LinearLayout>
-
+                android:layout_weight="1"
+                style="@style/CreatePartyEdt"
+                android:text="Name"
+                android:id="@+id/partyaddress"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -99,10 +78,6 @@
         android:layout_height="fill_parent"
         android:orientation="vertical"
         android:layout_marginTop="10dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/zoneajoutinvite">
         <RelativeLayout
             style="@style/LigneDeSeparation"/>
         <LinearLayout
@@ -115,6 +90,14 @@
                 android:hint="@string/createparty_email"
                 android:layout_weight="1"/>
 
+            <Spinner
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner"
+                android:entries="@array/role_array"
+                android:dropDownSelector="@android:drawable/spinner_dropdown_background"
+                android:layout_weight="1"/>
+
             <Button
                 android:id="@+id/btn_addinvite"
                 android:layout_gravity="center"
@@ -123,7 +106,6 @@
                 android:text="@string/createparty_ajout" />
 
         </LinearLayout>
-        </RelativeLayout>
         <RelativeLayout
             style="@style/LigneDeSeparation"/>
         <!--<ScrollView
@@ -135,7 +117,7 @@
             android:layout_weight="1"
             android:id="@+id/listView_Invite"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="wrap_content"/>
         <!-- </ScrollView>-->
 
         <Button
@@ -143,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/createparty_valider"
-            android:id="@+id/btnmodifyparty"/>
+            android:id="@+id/btncreateparty"/>
     </LinearLayout>
 
 </LinearLayout>

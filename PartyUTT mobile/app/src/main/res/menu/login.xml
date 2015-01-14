@@ -1,8 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.partyutt.Login" >
-    <item android:id="@+id/action_inscription"
-        android:title="@string/title_activity_inscription"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
+    <item android:name="action_inscription"
+        android:id="@+id/action_inscription"
+        android:title="@string/menu_inscription"/>
 </menu>

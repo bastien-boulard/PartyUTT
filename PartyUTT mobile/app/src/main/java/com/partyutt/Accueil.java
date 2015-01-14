@@ -49,12 +49,12 @@ public class Accueil extends Activity {
     List<Map<String, String>> partyList = new ArrayList<Map<String, String>>();
 
     Button createParty;
-    Switch switchCreateur, switchOrga, switchInvite;
-    ListView listViewCreateur, listViewOrga, listViewInvite;
-    TraiterAccueil.AllParty userParty;
+    public static Switch switchCreateur, switchOrga, switchInvite;
+    public static ListView listViewCreateur, listViewOrga, listViewInvite;
+    public static TraiterAccueil.AllParty userParty;
     String strintentToken,strintentEmail;
 
-    ArrayAdapter<String> adaptera, adapterb, adapterc;
+    public static ArrayAdapter<String> adaptera, adapterb, adapterc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,18 +66,14 @@ public class Accueil extends Activity {
             Intent intent = getIntent();
             strintentToken = intent.getStringExtra(getResources().getString(R.string.param_token));
             strintentEmail = intent.getStringExtra(getResources().getString(R.string.param_email));
-
-            //TraiterAccueil traiterAccueil = new TraiterAccueil();
-            //traiterAccueil.recuperationPartyAccueil(strintentEmail,strintentToken,getApplicationContext());
-            //Log.d("BLAH2", strintentEmail);
-            //asyncPOSTTask POSTask = new asyncPOSTTask();
-            //POSTask.execute(strintentEmail,strintentToken,"",getApplicationContext());
+            TraiterAccueil traiterAccueil = new TraiterAccueil();
+            traiterAccueil.recuperationPartyAccueil(strintentEmail,strintentToken,getApplicationContext());
         } else {
             strintentEmail="";
             strintentToken="";
             finish();
         }
-/*
+
         switchCreateur = (Switch)findViewById(R.id.switch_Createur);
         switchOrga = (Switch)findViewById(R.id.switch_Orga);
         switchInvite = (Switch)findViewById(R.id.switch_Invite);
@@ -86,6 +82,7 @@ public class Accueil extends Activity {
         listViewOrga = (ListView)findViewById(R.id.listView_Orga);
         listViewInvite = (ListView)findViewById(R.id.listView_Invite);
 
+       /*
         adaptera = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1,userParty.eventsOwner);
         adapterb = new ArrayAdapter<String>(this,
@@ -93,11 +90,12 @@ public class Accueil extends Activity {
         adapterc = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1,userParty.eventsInvite);
 
+
         listViewCreateur.setAdapter(adaptera);
         listViewOrga.setAdapter(adapterb);
         listViewInvite.setAdapter(adapterc);
 
-
+*/
         switchCreateur.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -130,7 +128,42 @@ public class Accueil extends Activity {
                 }
             }
         });
-*/
+
+        listViewCreateur.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent ownerParty = new Intent(getApplicationContext(),OwnerParty.class);
+                ownerParty.putExtra(getString(R.string.param_email),strintentEmail);
+                ownerParty.putExtra(getString(R.string.param_token),strintentToken);
+                ownerParty.putExtra(getString(R.string.param_ID), userParty.IDOwner.get(position).toString());
+                startActivity(ownerParty);
+            }
+        });
+
+        listViewOrga.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent orgaParty = new Intent(getApplicationContext(),Party.class);
+                orgaParty.putExtra(getString(R.string.param_email),strintentEmail);
+                orgaParty.putExtra(getString(R.string.param_token),strintentToken);
+                orgaParty.putExtra(getString(R.string.param_ID),userParty.IDOrga.get(position).toString());
+                orgaParty.putExtra(getString(R.string.param_isOrga),"1");
+                startActivity(orgaParty);
+            }
+        });
+
+        listViewInvite.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent inviteParty = new Intent(getApplicationContext(),Party.class);
+                inviteParty.putExtra(getString(R.string.param_email),strintentEmail);
+                inviteParty.putExtra(getString(R.string.param_token),strintentToken);
+                inviteParty.putExtra(getString(R.string.param_ID),userParty.IDInvite.get(position).toString());
+                inviteParty.putExtra(getString(R.string.param_isOrga),"0");
+                startActivity(inviteParty);
+            }
+        });
+
         createParty = (Button)findViewById(R.id.createparty);
         createParty.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +191,9 @@ public class Accueil extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_deco) {
+            TraiterAccueil traiter = new TraiterAccueil();
+            traiter.deco(strintentEmail,strintentToken,getApplicationContext(),this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -195,7 +230,6 @@ public class Accueil extends Activity {
                     HashMap contactMap = new HashMap();
                     contactMap.put("eventID", new Integer(JSONevents.getJSONObject(indice).getInt("eventID")));
                     contactMap.put("eventName", JSONevents.getJSONObject(indice).getString("eventName").toString());
-                    //contactMap.put("eventDate", JSONevents.getJSONObject(indice).getString("userPseudo").toString());
                     contactMap.put("userMail", JSONevents.getJSONObject(indice).getString("userMail").toString());
                     contactMap.put("isOrga", JSONevents.getJSONObject(indice).getInt("isOrga"));
                     contactMap.put("isComing", JSONevents.getJSONObject(indice).getInt("isComing"));

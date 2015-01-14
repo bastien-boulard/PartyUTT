@@ -6,4 +6,9 @@
         <item>Invité</item>
     </string-array>
 
+    <string-array name="presence_array">
+        <item>Présent</item>
+        <item>Absent</item>
+    </string-array>
+
 </resources>

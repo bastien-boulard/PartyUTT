@@ -1,7 +1,9 @@
 package com.partyutt;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -9,12 +11,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.partyutt.Traitement.AdapterMAJParty;
 import com.partyutt.Traitement.TraiterParty;
 
 import org.apache.http.HttpResponse;
@@ -38,49 +47,83 @@ import java.util.Map;
 
 public class Party extends Activity {
 
+    public static RelativeLayout layoutAddPeopleToTheParty;
     public static TextView titreParty,titleAddress,titleDate,titleStatut;
+    public static EditText editQte, editApport, editEmailInvite;
+    public static Spinner spinnerPresence;
+    public static ArrayList<String> arrayListInviteEmail = new ArrayList<String>();
+    public static ArrayList<String> arrayListInviteStatut = new ArrayList<String>();
+    public static ArrayList<String> arrayListInvitePresence = new ArrayList<String>();
+    public static ArrayList<String> arrayListInviteApport = new ArrayList<String>();
+    public static ArrayList<String> arrayListInviteQte = new ArrayList<String>();
+    public static AdapterMAJParty adapter;
+    String strintentToken,strintentEmail,strintentID,strintentRole;
 
-    List<Map<String, String>> contactList = new ArrayList<Map<String, String>>();
-    List<Map<String, String>> ownerParty = new ArrayList<Map<String, String>>();
-    List<Map<String, String>> orgaParty = new ArrayList<Map<String, String>>();
-    List<Map<String, String>> guestParty = new ArrayList<Map<String, String>>();
-    String strintentToken,strintentEmail,strintentID,strintentUserPseudo;
-    String error, eventName, eventDate, eventAddress;
-
-    String param_userPseudo = getResources().getString(R.string.param_userPseudo);
-    String param_isOrga = getResources().getString(R.string.param_isOrga);
-    String param_isComing = getResources().getString(R.string.param_isComing);
-    String param_guests = getResources().getString(R.string.param_guests);
+    ListView listInvite;
+    Button valider, addInvite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party);
 
+        arrayListInviteEmail.clear();
+        arrayListInviteApport.clear();
+        arrayListInviteQte.clear();
+        arrayListInvitePresence.clear();
+        arrayListInviteStatut.clear();
+
+        final TraiterParty traiterParty = new TraiterParty();
+
+        valider = (Button)findViewById(R.id.btnmodifyparty);
+        addInvite = (Button)findViewById(R.id.btn_addinvite);
+        listInvite = (ListView)findViewById(R.id.listView_Invite);
+        layoutAddPeopleToTheParty = (RelativeLayout)findViewById(R.id.zoneajoutinvite);
         titreParty = (TextView)findViewById(R.id.titleparty);
         titleStatut = (TextView)findViewById(R.id.titlestatut);
         titleAddress = (TextView)findViewById(R.id.titleaddress);
         titleDate = (TextView)findViewById(R.id.titledate);
 
+        spinnerPresence = (Spinner)findViewById(R.id.spinnerPresence);
+        editApport = (EditText)findViewById(R.id.editApport);
+        editQte = (EditText)findViewById(R.id.editQte);
+        editEmailInvite = (EditText)findViewById(R.id.editinviteemail);
+
+        adapter = new AdapterMAJParty(this,arrayListInviteEmail,arrayListInviteStatut,arrayListInvitePresence,arrayListInviteApport,arrayListInviteQte);
+        listInvite.setAdapter(adapter
+        );
+
         if (getIntent().getExtras() != null) {
             Intent intent = getIntent();
-            strintentUserPseudo = intent.getStringExtra(getResources().getString(R.string.param_userPseudo));
             strintentToken = intent.getStringExtra(getResources().getString(R.string.param_token));
             strintentEmail = intent.getStringExtra(getResources().getString(R.string.param_email));
             strintentID = intent.getStringExtra(getResources().getString(R.string.param_ID));
-            //asyncPOSTTask askWSForPartyData = new asyncPOSTTask();
-            //askWSForPartyData.execute(strintentEmail, strintentToken, strintentID,getApplicationContext());
-            TraiterParty traiterParty = new TraiterParty();
+            strintentRole = intent.getStringExtra(getResources().getString(R.string.param_isOrga));
             traiterParty.getPartyInfo(strintentEmail,strintentToken,strintentID,getApplicationContext());
         } else {
             strintentEmail="";
             strintentID="";
-            strintentUserPseudo="";
             strintentToken="";
+            strintentRole="";
         }
 
-    }
+        valider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //on va mettre a jour les informations de la soirée
+                traiterParty.updateParty(strintentEmail, strintentToken, strintentID, spinnerPresence.getSelectedItem().toString(), editApport.getText().toString(), editQte.getText().toString(), strintentRole, getApplicationContext());
+            }
+        });
 
+        addInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //on ajoute l'invité a la liste des invités
+                traiterParty.addToParty(editEmailInvite.getText().toString(),getApplicationContext());
+            }
+        });
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,98 +138,7 @@ public class Party extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
-    private class asyncPOSTTask extends AsyncTask<Object, Void, Context> {
-
-        private String JSONerror;
-
-        @Override
-        protected Context doInBackground(Object... params) {
-            String content = null;
-
-            try {
-
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost("http://192.168.43.147/partyUTT/eventpage.php");
-
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-                nameValuePairs.add(new BasicNameValuePair(getResources().getString(R.string.param_email), (String) params[0]));
-                nameValuePairs.add(new BasicNameValuePair(getResources().getString(R.string.param_token), (String) params[1]));
-                nameValuePairs.add(new BasicNameValuePair(getResources().getString(R.string.param_eventID), (String) params[2]));
-                Log.d("BLAH", nameValuePairs.toString());
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                HttpResponse response = httpclient.execute(httppost);
-                content = EntityUtils.toString(response.getEntity(), "utf8");
-
-                JSONObject requestAnswer = new JSONObject(content);
-
-                error = requestAnswer.getString("error");
-                eventName = requestAnswer.getJSONObject("data").getString("eventName");
-                eventDate = requestAnswer.getJSONObject("data").getString("eventDate");
-                eventAddress = requestAnswer.getJSONObject("data").getString("eventAddress");
-
-                for (int i=0; i<requestAnswer.getJSONArray(param_guests).length();i++) {
-                    HashMap contactMap = new HashMap();
-                    contactMap.put(param_userPseudo,requestAnswer.getJSONArray(param_guests).getJSONObject(i).getString(param_userPseudo));
-                    contactMap.put(param_isOrga,requestAnswer.getJSONArray(param_guests).getJSONObject(i).getString(param_isOrga));
-                    contactMap.put(param_isComing,requestAnswer.getJSONArray(param_guests).getJSONObject(i).getString(param_isComing));
-                    contactList.add(contactMap);
-
-
-                }
-
-            } catch (ClientProtocolException e) {
-                Log.e("ClientProtocolException", e.toString(), e);
-            } catch (IOException IO) {
-                Log.e("IOException", IO.toString(), IO);
-            } catch (Error error) {
-                Log.e("POST REQUEST ERROR", error.toString(), error);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return (Context) params[3];
-        }
-
-        @Override
-        protected void onPostExecute(Context result) {
-            if (Boolean.valueOf(JSONerror)) {
-                Toast.makeText(result, "ROTCER", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(result,"HECTOR",Toast.LENGTH_LONG).show();
-            }
-            titreParty = (TextView)findViewById(R.id.titleparty);
-            titleStatut = (TextView)findViewById(R.id.titlestatut);
-            titleAddress = (TextView)findViewById(R.id.titleaddress);
-            titleDate = (TextView)findViewById(R.id.titledate);
-            titreParty.setText(eventName);
-            titleStatut.setText("OWNER !");
-            titleAddress.setText(eventAddress);
-            titleDate.setText(eventDate);
-
-            for (int i=0;i<contactList.size();i++)
-            {
-                TableLayout tl = (TableLayout) findViewById(R.id.tablelayout);
-                TableRow tr = new TableRow(result);
-                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
-                TextView invitation = new TextView(result);
-                invitation.setText(contactList.get(i).get(param_userPseudo));
-
-                // si c'est l'utilisateur alors on va mettre son statut en gras
-                if (contactList.get(i).get(param_userPseudo).equals(strintentUserPseudo)) {
-                    invitation.setTypeface(null, Typeface.BOLD);
-                }
-                invitation.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
-                tr.addView(invitation);
-                tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
-            }
-            //statutParty.setText(eventD);
-        }
-
-    }
 }

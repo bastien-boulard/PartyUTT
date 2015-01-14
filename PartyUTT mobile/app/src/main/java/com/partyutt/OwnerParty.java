@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,38 +12,36 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.partyutt.Traitement.CustomAdapter;
-import com.partyutt.Traitement.TraiterCreateParty;
+import com.partyutt.Traitement.AdapterMAJParty;
+import com.partyutt.Traitement.TraiterOwnerParty;
 
-
+import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-// envoyer requete post => newevent.php
 
-public class CreateParty extends Activity {
+public class OwnerParty extends Activity {
 
-    Button createParty, addInvite;
-    Context createPartyContext;
-    String strintentToken,strintentEmail;
-    EditText titre,adresse;
-    public static EditText inviteMail;
-    TextView date,time;
-    Spinner inviteRole;
-    public static ListView listInvite;
-    public static ArrayList<String> arrayListMailInvite = new ArrayList<String>();
-    public static ArrayList<String> arrayListRoleInvite = new ArrayList<String>();
-    public static CustomAdapter customAdapter;
+    public static RelativeLayout layoutAddPeopleToTheParty;
+    public static EditText editEmailInvite, titre, adresse;
+    public static Spinner spinnerInvite;
+    public static ArrayList<String> arrayListInviteEmail = new ArrayList<String>();
+    public static ArrayList<String> arrayListInviteStatut = new ArrayList<String>();
+    public static ArrayList<String> arrayListInvitePresence = new ArrayList<String>();
+    public static ArrayList<String> arrayListInviteApport = new ArrayList<String>();
+    public static ArrayList<String> arrayListInviteQte = new ArrayList<String>();
+    public static AdapterMAJParty adapter;
+    String strintentToken,strintentEmail,strintentID,strintentRole;
+    public static TextView date,time;
 
     private int year;
     private int month;
@@ -52,67 +49,106 @@ public class CreateParty extends Activity {
     private int hour;
     private int min;
 
+    ListView listInvite;
+    Button valider, addInvite;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_party);
-        final TraiterCreateParty traiterCreateParty = new TraiterCreateParty();
+        setContentView(R.layout.activity_owner_party);
 
-        if (getIntent().getExtras() != null) {
-            Intent intent = getIntent();
-            strintentToken = intent.getStringExtra(getApplicationContext().getResources().getString(R.string.param_token));
-            strintentEmail = intent.getStringExtra(getApplicationContext().getResources().getString(R.string.param_email));
-        } else {
-            strintentEmail="";
-            strintentToken="";
-        }
+        arrayListInviteEmail.clear();
+        arrayListInvitePresence.clear();
+        arrayListInviteQte.clear();
+        arrayListInviteApport.clear();
+        arrayListInviteStatut.clear();
+
+        final TraiterOwnerParty traiterOwnerParty = new TraiterOwnerParty();
 
         date = (TextView)findViewById(R.id.partydate);
         time = (TextView)findViewById(R.id.partyheure);
         titre = (EditText)findViewById(R.id.partytitle);
         adresse = (EditText)findViewById(R.id.partyaddress);
+
+        valider = (Button)findViewById(R.id.btncreateparty);
         addInvite = (Button)findViewById(R.id.btn_addinvite);
-        inviteMail = (EditText)findViewById(R.id.editinviteemail);
-        inviteRole = (Spinner)findViewById(R.id.spinner);
         listInvite = (ListView)findViewById(R.id.listView_Invite);
+        layoutAddPeopleToTheParty = (RelativeLayout)findViewById(R.id.zoneajoutinvite);
 
-        customAdapter = new CustomAdapter(this,arrayListMailInvite,arrayListRoleInvite);
-        listInvite.setAdapter(customAdapter);
+        spinnerInvite = (Spinner)findViewById(R.id.spinner);
+        editEmailInvite = (EditText)findViewById(R.id.editinviteemail);
 
+        adapter = new AdapterMAJParty(this,arrayListInviteEmail,arrayListInviteStatut,arrayListInvitePresence,arrayListInviteApport,arrayListInviteQte);
+        listInvite.setAdapter(adapter);
 
-        addInvite.setOnClickListener(new View.OnClickListener() {
+        if (getIntent().getExtras() != null) {
+            Intent intent = getIntent();
+            strintentToken = intent.getStringExtra(getResources().getString(R.string.param_token));
+            strintentEmail = intent.getStringExtra(getResources().getString(R.string.param_email));
+            strintentID = intent.getStringExtra(getResources().getString(R.string.param_ID));
+            traiterOwnerParty.getOwnerPartyInfo(strintentEmail, strintentToken, strintentID, getApplicationContext());
+        } else {
+            strintentEmail="";
+            strintentID="";
+            strintentToken="";
+        }
+
+        valider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String result = traiterCreateParty.AddToParty(inviteMail.getText().toString(), inviteRole.getSelectedItem().toString(), getApplicationContext());
-                Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG);
-            }
+                //on va mettre a jour les informations de la soirée
+                String strTitre = titre.getText().toString();
+                String strAdresse = adresse.getText().toString();
+                String resultatTests,resultatDate;
+                resultatTests = traiterOwnerParty.VerificationZoneDeTexteNonVide(strTitre,strAdresse,getApplicationContext());
+                if (getApplicationContext().getResources().getString(R.string.erreur_OK).equals(resultatTests)) {
+                    resultatDate = traiterOwnerParty.VerifDateEtTime(date.getText().toString(),time.getText().toString(),getApplicationContext());
+                    traiterOwnerParty.TraitementOwnerParty(strintentEmail, strintentToken, strintentID, strTitre, strAdresse, resultatDate, arrayListInviteEmail, arrayListInviteStatut, getApplicationContext());
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                    builder.setMessage(resultatTests)
+                            .setTitle(R.string.erreur_Erreur)
+                            .setPositiveButton(R.string.erreur_OK, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    builder.create();
+                }
+                }
         });
 
         listInvite.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(CreateParty.this);
-                builder.setTitle(R.string.createparty_titredialog);
-                builder.setMessage(R.string.createparty_supprimercetinvite);
-                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        arrayListRoleInvite.remove(position);
-                        arrayListMailInvite.remove(position);
-                        customAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(OwnerParty.this);
+                builder.setMessage(R.string.ownerparty_quefaire)
+                        .setTitle(R.string.ownerparty_gestion)
+                        .setPositiveButton(R.string.ownerparty_changerstatut, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if (arrayListInviteStatut.get(position).equals(getResources().getString(R.string.createparty_orga)))
+                                {
+                                    arrayListInviteStatut.set(position, getResources().getString(R.string.createparty_invite));
+                                } else {
+                                    arrayListInviteStatut.set(position,getResources().getString(R.string.createparty_orga));
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNeutralButton(R.string.ownerparty_annuler, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                builder.show();
             }
         });
 
-        createPartyContext = this;
+        addInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //on ajoute l'invité a la liste des invités
+                traiterOwnerParty.AddToParty(editEmailInvite.getText().toString(), spinnerInvite.getSelectedItem().toString(), getApplicationContext());
+            }
+        });
 
         final Calendar c = Calendar.getInstance();
         year  = c.get(Calendar.YEAR);
@@ -163,34 +199,6 @@ public class CreateParty extends Activity {
             @Override
             public void onClick(View v) {
                 showDialog(2222);
-            }
-        });
-
-        createParty = (Button)findViewById(R.id.btncreateparty);
-        createParty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String strTitre = titre.getText().toString();
-                String strAdresse = adresse.getText().toString();
-                String resultatTests,resultatDate;
-                resultatTests = traiterCreateParty.VerificationZoneDeTexteNonVide(strTitre,strAdresse,getApplicationContext());
-                if (getApplicationContext().getResources().getString(R.string.erreur_OK).equals(resultatTests)) {
-                    resultatDate = traiterCreateParty.VerifDateEtTime(date.getText().toString(),time.getText().toString(),getApplicationContext());
-                    traiterCreateParty.TraitementCreateParty(strintentEmail, strintentToken, strTitre, strAdresse, resultatDate, arrayListMailInvite, arrayListRoleInvite, getApplicationContext());
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                    builder.setMessage(resultatTests)
-                            .setTitle(R.string.erreur_Erreur)
-                            .setPositiveButton(R.string.erreur_OK, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            });
-                    builder.create();
-                }
-                // requête POST avec les informations de l'event
-                // on ferme cette page => on revient sur la page d'accueil
-
             }
         });
 
@@ -287,7 +295,7 @@ public class CreateParty extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.create_party, menu);
+        getMenuInflater().inflate(R.menu.owner_party, menu);
         return true;
     }
 

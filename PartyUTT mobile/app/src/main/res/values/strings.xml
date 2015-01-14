@@ -6,7 +6,14 @@
     <string name="switch_Off">I</string>
 
     <!-- Params -->
+    <string name="param_guestEmail">guestEmail</string>
+    <string name="param_guestStatus">guestStatus</string>
+    <string name="param_present">Présent</string>
+    <string name="param_absent">Absent</string>
+    <string name="param_data">data</string>
     <string name="param_email">email</string>
+    <string name="param_userEmail">userEmail</string>
+    <string name="param_owner">owner</string>
     <string name="param_password">password</string>
     <string name="param_token">token</string>
     <string name="param_ID">ID</string>
@@ -20,7 +27,8 @@
     <string name="param_eventDate">eventDate</string>
     <string name="param_guests">guests</string>
     <string name="param_guestList">guestList</string>
-    <string name="param_guestStatus">guestStatus</string>
+    <string name="param_toBring">toBring</string>
+    <string name="param_quantity">quantity</string>
 
     <!-- Accueil -->
     <string name="acceuil_VosSoirées">Vos soirées</string>
@@ -29,6 +37,7 @@
     <string name="accueil_Invite">Invité</string>
     <string name="accueil_request_query_token">token</string>
     <string name="accueil_request_answer_events">events</string>
+    <string name="accueil_request_answer_eventsOwned">eventsOwned</string>
     <string name="accueil_request_answer_eventID">eventID</string>
     <string name="accueil_request_answer_eventName">eventName</string>
     <string name="accueil_request_answer_eventDate">eventDate</string>
@@ -47,13 +56,34 @@
     <string name="login_POST_answer_token">token</string>
     <string name="login_POST_answer_pseudo">pseudo</string>
 
+    <!-- Owner Party -->
+    <string name="ownerparty_changerstatut">Modifier le statut</string>
+    <string name="ownerparty_deleteinvite">Supprimer l\'invité</string>
+    <string name="ownerparty_annuler">Annuler</string>
+    <string name="ownerparty_gestion">Gestion</string>
+    <string name="ownerparty_quefaire">Que souhaitez-vous faire ?</string>
+
     <!-- Create Party -->
     <string name="createparty_titre">Titre</string>
     <string name="createparty_heure">Heure</string>
     <string name="createparty_date">Date</string>
     <string name="createparty_address">Adresse</string>
     <string name="createparty_valider">Valider</string>
-    <string name="createparty_ajoutNouvelInvite">Ajouter un nouvel invit\é</string>
+    <string name="createparty_ajout">Ajout</string>
+    <string name="createparty_email">Email</string>
+    <string name="createparty_inviteajoute">Invité ajouté</string>
+    <string name="createparty_titredialog">Attention</string>
+    <string name="createparty_supprimercetinvite">Supprimer cet invité ?</string>
+    <string name="createparty_orga">Orga</string>
+    <string name="createparty_invite">Invité</string>
+    <string name="createparty_createur">Créateur</string>
+
+    <!-- Party -->
+    <string name="party_statut">Statut :  </string>
+    <string name="party_apport">Apport :  </string>
+    <string name="party_qte">Qte</string>
+    <string name="party_present">Présent</string>
+    <string name="party_absent">Absent</string>
 
     <!-- Inscription -->
     <string name="inscription_valider">Valider</string>
@@ -69,6 +99,8 @@
     <!-- Menu -->
     <string name="menu_profil">Profil</string>
     <string name="menu_accueil">Accueil</string>
+    <string name="menu_déconnexion">Déconnexion</string>
+    <string name="menu_inscription">Inscription</string>
 
     <!-- Divers -->
     <string name="divers_present_soiree">I\'m in</string>
@@ -79,11 +111,11 @@
     <string name="erreur_OK">OK</string>
     <string name="erreur_mailVide">Vous n\'avez pas sasi votre adresse mail</string>
     <string name="erreur_MDPVide">Vous n\'avez pas saisi de mot de passe</string>
+    <string name="erreur_incorrect">Mot de passe incorrect</string>
     <string name="erreur_addressVide">Erreur</string>
     <string name="erreur_eventNameVide">Erreur</string>
 
-
-    <!-- Titre activités-->
+    <!-- Titre activités -->
     <string name="title_activity_login">Login</string>
     <string name="title_activity_party">La soirée</string>
     <string name="title_activity_create_party">Créer une soirée</string>
@@ -92,12 +124,17 @@
     <string name="app_name">PartyUTT</string>
 
     <!-- Webservice -->
+    <string name="webservice_disco">http://192.168.173.1/partyUTT/logout.php</string>
     <string name="webservice_inscription">http://192.168.173.1/partyUTT/inscription.php</string>
     <string name="webservice_login">http://192.168.173.1/partyUTT/login.php</string>
     <string name="webservice_accueil">http://192.168.173.1/partyUTT/homepage.php</string>
     <string name="webservice_createparty">http://192.168.173.1/partyUTT/newevent.php</string>
-    <string name="webservice_party">http://192.168.173.1/partyUTT/inscription.php</string>
-
+    <string name="webservice_party">http://192.168.173.1/partyUTT/eventpage.php</string>
+    <string name="webservice_updateinvite">http://192.168.173.1/partyUTT/updateinvite.php</string>
+    <string name="webservice_updateeventorga">http://192.168.173.1/partyUTT/updateeventorga.php</string>
+    <string name="webservice_updateeventowner">http://192.168.173.1/partyUTT/updateeventowner.php</string>
     //.43.147
-    //.173.1
+    //.173.1    <string name="title_activity_owner_party">OwnerParty</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

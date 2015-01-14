@@ -1,14 +1,12 @@
 package com.partyutt.Traitement;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.partyutt.Accueil;
 import com.partyutt.R;
-import com.partyutt.Webservice.OnTaskCompleted;
 import com.partyutt.Webservice.POSTRequest;
 
 import org.json.JSONException;
@@ -57,12 +55,18 @@ public class TraiterLogin {
                 Log.d("TEST", parametre);
                 JSONObject requestAnswer = new JSONObject(parametre);
                 JSONerror = requestAnswer.getString(postexecuteContext.getResources().getString(R.string.login_POST_answer_error));
-                JSONtoken = requestAnswer.getString(postexecuteContext.getResources().getString(R.string.login_POST_answer_token));
-                Intent accueilIntent = new Intent(postexecuteContext,Accueil.class);
-                accueilIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                accueilIntent.putExtra(postexecuteContext.getResources().getString(R.string.param_email),userEmail);
-                accueilIntent.putExtra(postexecuteContext.getResources().getString(R.string.param_token),JSONtoken);
-                postexecuteContext.startActivity(accueilIntent);
+
+                if (!((Boolean.valueOf(JSONerror)))) {
+                    JSONtoken = requestAnswer.getString(postexecuteContext.getResources().getString(R.string.login_POST_answer_token));
+                    Intent accueilIntent = new Intent(postexecuteContext, Accueil.class);
+                    accueilIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    accueilIntent.putExtra(postexecuteContext.getResources().getString(R.string.param_email), userEmail);
+                    accueilIntent.putExtra(postexecuteContext.getResources().getString(R.string.param_token), JSONtoken);
+                    postexecuteContext.startActivity(accueilIntent);
+                } else {
+                    Toast.makeText(postexecuteContext,postexecuteContext.getResources().getString(R.string.erreur_incorrect),Toast.LENGTH_LONG).show();
+
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
